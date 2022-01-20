@@ -1,7 +1,7 @@
-# 444noresponse
-WordPress\
-![WP](GitHub-Mark2.png)\
-LEMP docker-compose SSL redis\
+# Wordpress docker-compose stack with SSL and redis
+
+![WP](GitHub-Mark2.png)
+
 
 # Prerequisites
 

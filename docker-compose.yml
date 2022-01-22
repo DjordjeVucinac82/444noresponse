@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3'
 
 services:
   db:
@@ -12,7 +12,7 @@ services:
       - MYSQL_USER=$MYSQL_USER
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
     volumes:
-      - dbdata:/var/lib/mysql
+      - ./dbdata:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
       - app-network
@@ -20,9 +20,11 @@ services:
   wordpress:
     depends_on:
       - db
-    image: wordpress:5.8.3-fpm
+    image: wordpress:5.8.3-php7.4-fpm
     container_name: wordpress
     restart: unless-stopped
+	link:
+	  - db
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -30,25 +32,27 @@ services:
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
       - WORDPRESS_DB_NAME=wordpress
     volumes:
-      - wordpress:/var/www/html
+      - ./wordpress:/var/www/html
     networks:
       - app-network
 
   webserver:
     depends_on:
       - wordpress
-    image: nginx:1.20.2-alpine
+    image: nginx:1.15.12-alpine
     container_name: webserver
     restart: unless-stopped
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
-      - wordpress:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
+      - ./wordpress:/var/www/html
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/html
     networks:
       - app-network
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"  
 
   certbot:
     depends_on:
@@ -56,14 +60,14 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - certbot-etc:/etc/letsencrypt
-      - wordpress:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email djordje.vucinac@gmail.com --agree-tos --no-eff-email --force-renewal --staging -d wp.444noresponse.com -d www.wp.444noresponse.com
-
-volumes:
-  certbot-etc:
-  wordpress:
-  dbdata:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/html
+    #command: certonly --webroot --webroot-path=/var/www/html --email djordje.vucinac@gmail.com --agree-tos --no-eff-email --force-renewal -d 444noresponse.com -d www.444noresponse.com
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+#volumes:
+#  certbot-etc:
+#  wordpress:
+#  dbdata:
 
 networks:
   app-network:

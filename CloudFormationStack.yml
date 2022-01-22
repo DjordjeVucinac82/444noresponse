@@ -43,19 +43,7 @@ Resources:
           Value: 
         - Key: CFStack
           Value:
-
-  SubnetCPrivate:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      CidrBlock: 10.0.3.0/24
-      AvailabilityZone: ""
-      Tags:
-        - Key: Name
-          Value: 
-        - Key: CFStack
-          Value:           
-
+          
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     DependsOn: VPC

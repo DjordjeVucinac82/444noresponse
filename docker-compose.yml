@@ -23,8 +23,8 @@ services:
     image: wordpress:5.8.3-php7.4-fpm
     container_name: wordpress
     restart: unless-stopped
-	link:
-	  - db
+	  link:
+	    - db
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306

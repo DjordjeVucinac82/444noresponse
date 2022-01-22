@@ -23,7 +23,7 @@ services:
     image: wordpress:5.8.3-php7.4-fpm
     container_name: wordpress
     restart: unless-stopped
-    link:
+    links:
       - db
     env_file: .env
     environment:
@@ -36,11 +36,11 @@ services:
     networks:
       - app-network
 
-  webserver:
+  nginx:
     depends_on:
       - wordpress
     image: nginx:1.15.12-alpine
-    container_name: webserver
+    container_name: nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -49,20 +49,20 @@ services:
       - ./wordpress:/var/www/html
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/html
+      - ./data/certbot/www:/var/www/certbot
     networks:
       - app-network
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"  
 
   certbot:
     depends_on:
-      - webserver
+      - nginx
     image: certbot/certbot
     container_name: certbot
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/html
-    #command: certonly --webroot --webroot-path=/var/www/html --email djordje.vucinac@gmail.com --agree-tos --no-eff-email --force-renewal -d 444noresponse.com -d www.444noresponse.com
+      - ./data/certbot/www:/var/www/certbot
+    #command: certonly --webroot --webroot-path=/var/www/html --email djordje.vucinac@gmail.com --agree-tos --no-eff-email --force-renewal --staging -d 444noresponse.com -d www.444noresponse.com
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 #volumes:
 #  certbot-etc:

@@ -13,6 +13,7 @@ services:
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
     volumes:
       - ./dbdata:/var/lib/mysql
+      # TODO add backup folder ./dbdata/backupdb:/var/lib/mysql/backupdb
     command: '--default-authentication-plugin=mysql_native_password'
     networks:
       - app-network
@@ -24,7 +25,7 @@ services:
     container_name: wordpress
     restart: unless-stopped
     links:
-      - db
+      - db:db
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -64,6 +65,26 @@ services:
       - ./data/certbot/www:/var/www/certbot
     #command: certonly --webroot --webroot-path=/var/www/html --email djordje.vucinac@gmail.com --agree-tos --no-eff-email --force-renewal --staging -d 444noresponse.com -d www.444noresponse.com
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.1.1-fpm
+    container_name: phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    links:
+      - db:db
+    ports:
+      - "8181:80"
+    env_file: .env
+    environment:
+      - PMA_HOST=db:3306
+      - PMA_USER=$MYSQL_USER
+      - PMA_PASSWORD=$MYSQL_PASSWORD
+      - PMA_ARBITRARY=1
+    networks:
+      - app-network
+
 #volumes:
 #  certbot-etc:
 #  wordpress:

@@ -19,6 +19,8 @@ Rename .env.example to .env: \
 `mv .env.example .env` \
 Populate paswords fields in new .env file (your_password)
 
+Open ports to www: 22, 80, 443, 8080
+
 Start docker-compose: \
 `sudo chmod +x init-letsencrypt.sh` \
 `sudo ./init-letsencrypt.sh`

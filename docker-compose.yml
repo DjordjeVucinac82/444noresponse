@@ -26,6 +26,8 @@ services:
     restart: unless-stopped
     links:
       - db:db
+    ports:
+      - "9000:80"  
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -75,7 +77,7 @@ services:
     links:
       - db:db
     ports:
-      - "8181:80"
+      - "8080:80"
     env_file: .env
     environment:
       - PMA_HOST=db:3306

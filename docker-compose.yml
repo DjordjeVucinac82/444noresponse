@@ -8,7 +8,7 @@ services:
     env_file: .env
     environment:
       - MYSQL_DATABASE=wordpress
-      - MYSQL_ROOT_PASSWORD=&MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
       - MYSQL_USER=$MYSQL_USER
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
     volumes:
@@ -27,7 +27,7 @@ services:
     links:
       - db:db
     ports:
-      - "9000:80"  
+      - "9000:80"
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -55,7 +55,7 @@ services:
       - ./data/certbot/www:/var/www/certbot
     networks:
       - app-network
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"  
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   certbot:
     depends_on:
@@ -69,7 +69,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.1.1-fpm
+    image: phpmyadmin/phpmyadmin:5.1.1
     container_name: phpmyadmin
     restart: unless-stopped
     depends_on:

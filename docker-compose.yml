@@ -21,17 +21,30 @@ services:
   wordpress:
     depends_on:
       - db
+      - redis
     image: wordpress:5.8.3-php7.4-fpm
     container_name: wordpress
     restart: unless-stopped
     links:
       - db:db
+      - redis:redis
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
       - WORDPRESS_DB_USER=$MYSQL_USER
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
       - WORDPRESS_DB_NAME=wordpress
+      #- WPFPM_WP_REDIS_HOST: redis
+      #- WPFPM_RT_WP_NGINX_HELPER_CACHE_PATH: "/tmp/cache"
+      #- WP_PLUGINS: "nginx-helper redis-cache"
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"  
+
     volumes:
       - ./wordpress:/var/www/html
     networks:
@@ -49,6 +62,7 @@ services:
     volumes:
       - ./wordpress:/var/www/html
       - ./data/nginx:/etc/nginx/conf.d
+      - ./data/nginx/logs:/var/log/nginx
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
     networks:
@@ -82,8 +96,26 @@ services:
       - PMA_USER=$MYSQL_USER
       - PMA_PASSWORD=$MYSQL_PASSWORD
       - PMA_ARBITRARY=1
+    volumes:
+      - ./phpmyadmin:/var/www/pma
     networks:
       - app-network
+
+  redis:
+    image: redis:6.2.6
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis-data:/var/lib/redis
+      - ./data/redis-conf:/usr/local/etc/redis/redis.conf  
+    networks:
+      - app-network
+    environment:
+      - REDIS_REPLICATION_MODE=master 
+    command: redis-server --save 20 1 --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    #command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
+
 
 #volumes:
 #  certbot-etc:

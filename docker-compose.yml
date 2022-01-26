@@ -39,7 +39,7 @@ services:
       #- WP_PLUGINS: "nginx-helper redis-cache"
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - REDIS_PASSWORD=$REDIS_PASSWORD
     logging:
       options:
         max-size: "10m"
@@ -113,7 +113,7 @@ services:
       - app-network
     environment:
       - REDIS_REPLICATION_MODE=master 
-    command: redis-server --save 20 1 --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    command: redis-server --save 20 1 --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes --loglevel warning --requirepass $REDIS_PASSWORD
     #command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
 
 

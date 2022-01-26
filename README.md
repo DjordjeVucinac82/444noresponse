@@ -1,5 +1,7 @@
 # Wordpress docker-compose stack with SSL and redis
 ![WP](GitHub-Mark2.png)
+
+⚠️⚠️⚠️ STACK IS NOT YET READY FOR PRODUCTION USE, USE IT WITH CAUTION ⚠️⚠️⚠️
 ## References
 https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose\
 https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04

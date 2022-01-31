@@ -1,9 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: >
-    Template for wp.444noresponse.com Platform 
+Description: Template for 444noresponse.com Platform 
 
 Parameters:
+  AvailabilityZone:
+    Type: String
+    Default: eu-central-1a
 
 Resources:
   VPC:
@@ -15,17 +16,18 @@ Resources:
       InstanceTenancy: default
       Tags:
         - Key: Name
-          Value: 
+          Value: 444noresponse.com
 
   SubnetAPublic:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.0.1.0/24
-      AvailabilityZone: ""
+      AvailabilityZone: !Ref AvailabilityZone
+      MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: 
+          Value: 444noresponse.com
           
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -33,7 +35,7 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value:  
+          Value:  444noresponse.com
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -47,7 +49,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: 
+          Value: 444noresponse.com
 
   PublicRoute1:             
     Type: AWS::EC2::Route
@@ -66,11 +68,11 @@ Resources:
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable ssh, HTTP n HTTPS access for application
+      GroupDescription: Enable SSH, HTTP n HTTPS access for application
       VpcId: !Ref VPC
       Tags: 
         - Key: Name
-          Value: 
+          Value: 444noresponse.com
       SecurityGroupIngress: 
         - IpProtocol: tcp
           FromPort: 22
@@ -84,9 +86,44 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-        - IpProtocol: icmp
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0   
+        # - IpProtocol: icmp
+        #   FromPort: -1
+        #   ToPort: -1
+        #   CidrIp: 0.0.0.0/0   
 
-# TODO add ec2 t2-micro Ubuntu 20.04 with user-data Docker
+  ec2:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone
+      SubnetId: !Ref SubnetAPublic
+      ImageId: ami-0d527b8c289b4af7f  #Ubuntu 20.04 eu-central-1
+      InstanceType: t2.micro
+      KeyName: awsdjole
+      BlockDeviceMappings:
+        - DeviceName: '/dev/sda1'
+          Ebs:
+            VolumeSize: 10 # in GB
+            VolumeType: gp2
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            # Install docker ubuntu
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            add-apt-repository \
+              "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) \
+              stable"
+            apt-get update
+            apt-get install -y docker-ce
+            usermod -aG docker ubuntu
+            # Install docker-compose ubuntu
+            curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+      Tags:
+        - Key: Name
+          Value: 444noresponse.com    

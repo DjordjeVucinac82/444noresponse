@@ -22,3 +22,4 @@ node_modules/
 *.sql
 *.sqlite
 .env
+*.pem

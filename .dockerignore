@@ -2,3 +2,4 @@
 .git
 docker-compose.yml
 .dockerignore
+*.pem

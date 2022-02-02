@@ -19,6 +19,7 @@ Clone repository: \
 
 Rename .env.example to .env: \
 `mv .env.example .env` \
+`sudo nano .env` \
 Populate paswords fields in new .env file (your_password)
 
 ⚠️Open ports in your firewall: 22, 80, 443, 8080

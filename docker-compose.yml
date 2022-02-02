@@ -96,14 +96,15 @@ services:
       - PMA_USER=$MYSQL_USER
       - PMA_PASSWORD=$MYSQL_PASSWORD
       - PMA_ARBITRARY=1
-    volumes:
-      - ./phpmyadmin:/var/www/pma
+    # volumes:
+    #   - ./phpmyadmin:/var/www/pma
     networks:
       - app-network
 
   redis:
     image: redis:6.2.6
     restart: unless-stopped
+    container_name: redis
     ports:
       - "6379:6379"
     volumes:

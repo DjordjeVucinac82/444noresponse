@@ -21,7 +21,7 @@ Rename .env.example to .env: \
 `mv .env.example .env` \
 Populate paswords fields in new .env file (your_password)
 
-Open ports in your firewall: 22, 80, 443, 8080
+⚠️Open ports in your firewall: 22, 80, 443, 8080
 
 Start docker-compose: \
 `sudo chmod +x init-letsencrypt.sh` \

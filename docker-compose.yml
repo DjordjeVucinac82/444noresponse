@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
       - redis
-    image: wordpress:5.8.3-php7.4-fpm
+    image: wordpress:5.9-php7.4-fpm
     container_name: wordpress
     restart: unless-stopped
     links:

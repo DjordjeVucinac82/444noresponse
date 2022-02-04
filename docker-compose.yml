@@ -81,7 +81,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.1.1
+    image: phpmyadmin:5.1.1
     container_name: phpmyadmin
     restart: unless-stopped
     depends_on:

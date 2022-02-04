@@ -79,5 +79,5 @@ echo
 echo "### Reloading nginx ..."
 docker-compose exec nginx nginx -s reload
 
-echo "### Starting everything else ..."
-docker-compose up -d
+echo "### Starting phpmyadmin..."
+docker-compose up -d phpmyadmin

@@ -86,10 +86,12 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
-          CidrIp: 0.0.0.0/0  
+        # 8080 port for phpmyadmin,securyty reason 
+        # - IpProtocol: tcp
+        #   FromPort: 8080
+        #   ToPort: 8080
+        #   CidrIp: 0.0.0.0/0  
+        # Allow to ping server
         # - IpProtocol: icmp
         #   FromPort: -1
         #   ToPort: -1
@@ -106,7 +108,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: '/dev/sda1'
           Ebs:
-            VolumeSize: 10 # in GB
+            VolumeSize: 20 # in GB
             VolumeType: gp2
       SecurityGroupIds: 
         - !Ref SecurityGroup

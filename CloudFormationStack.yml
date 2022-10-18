@@ -103,6 +103,7 @@ Resources:
       AvailabilityZone: !Ref AvailabilityZone
       SubnetId: !Ref SubnetAPublic
       ImageId: ami-0d527b8c289b4af7f  #Ubuntu 20.04 eu-central-1
+      # ImageId: ami-0caef02b518350c8b  #Ubuntu 22.04 eu-central-1
       InstanceType: t2.micro
       KeyName: awsdjole
       BlockDeviceMappings:

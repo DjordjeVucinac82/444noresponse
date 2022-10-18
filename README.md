@@ -43,6 +43,7 @@ Domain name should be A records domain name to IP.
 CloudFormation Stack will create EC2 Ubuntu 20.04 server in eu-central-1 (Frankfurt) region with docker and docker-compose. ⚠️Need to create .pem key manualy in selected AWS region. \
 Need to install aws cli: <https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html> \
 Setup AWS access keys and region: <https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html> \
+
 Run these commands to start, update or delete CloudFormation stack, use --profile your_profile flag if needed: \
 `aws cloudformation create-stack --stack-name noresponse --template-body file://CloudFormationStack.yml` \
 `aws cloudformation update-stack --stack-name noresponse --template-body file://CloudFormationStack.yml` \

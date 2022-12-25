@@ -129,8 +129,8 @@ Resources:
             apt-get install -y docker-ce
             usermod -aG docker ubuntu
             # Install docker-compose
-            # version docker-compose 1.21.0
-            curl -L https://github.com/docker/compose/releases/download/2.14.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+            # prev-version docker-compose 1.21.0
+            curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
       Tags:
         - Key: Name

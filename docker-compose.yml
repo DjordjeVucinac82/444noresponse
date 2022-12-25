@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
       # - redis
-    image: wordpress:5.9-php7.4-fpm
+    image: wordpress:6.1.1-php8.2-fpm
     container_name: wordpress
     restart: unless-stopped
     links:
@@ -52,7 +52,7 @@ services:
   nginx:
     depends_on:
       - wordpress
-    image: nginx:1.20.2-alpine
+    image: nginx:1.23.3-alpine
     container_name: nginx
     restart: unless-stopped
     ports:
@@ -80,7 +80,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   phpmyadmin:
-    image: phpmyadmin:5.1.1
+    image: phpmyadmin:5.2.0
     container_name: phpmyadmin
     restart: unless-stopped
     depends_on:

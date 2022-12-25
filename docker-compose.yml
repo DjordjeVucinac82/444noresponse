@@ -21,13 +21,13 @@ services:
   wordpress:
     depends_on:
       - db
-      - redis
+      # - redis
     image: wordpress:5.9-php7.4-fpm
     container_name: wordpress
     restart: unless-stopped
     links:
       - db:db
-      - redis:redis
+      # - redis:redis
     env_file: .env
     environment:
       - WORDPRESS_DB_HOST=db:3306
@@ -44,7 +44,6 @@ services:
       options:
         max-size: "10m"
         max-file: "10"  
-
     volumes:
       - ./wordpress:/var/www/html
     networks:
@@ -101,21 +100,21 @@ services:
     networks:
       - app-network
 
-  redis:
-    image: redis:6.2.6
-    restart: unless-stopped
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./data/redis-data:/var/lib/redis
-      - ./data/redis-conf:/usr/local/etc/redis/redis.conf  
-    networks:
-      - app-network
-    environment:
-      - REDIS_REPLICATION_MODE=master 
-    command: redis-server --save 20 1 --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes --loglevel warning --requirepass $REDIS_PASSWORD
-    #command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
+  # redis:
+  #   image: redis:6.2.6
+  #   restart: unless-stopped
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - ./data/redis-data:/var/lib/redis
+  #     - ./data/redis-conf:/usr/local/etc/redis/redis.conf  
+  #   networks:
+  #     - app-network
+  #   environment:
+  #     - REDIS_REPLICATION_MODE=master 
+  #   command: redis-server --save 20 1 --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes --loglevel warning --requirepass $REDIS_PASSWORD
+  #   #command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
 
 
 #volumes:

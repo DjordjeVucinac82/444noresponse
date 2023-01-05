@@ -46,7 +46,7 @@ services:
         max-file: "10"  
     volumes:
       - ./wordpress:/var/www/html
-      - ./data/upload:/usr/local/etc/php/conf.d
+      - ./data/upload/upload.ini:/usr/local/etc/php/conf.d/upload.ini
     networks:
       - app-network
 
